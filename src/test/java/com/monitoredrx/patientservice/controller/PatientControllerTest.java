@@ -40,7 +40,7 @@ public class PatientControllerTest {
     private PatientService patientService;
     
     private Patient patient;
-
+    
     @BeforeEach
     void setUp() {
     	patient = new Patient();
@@ -51,6 +51,7 @@ public class PatientControllerTest {
     	
     	patient.setCreatedDate(new Date());
     	patient.setModifiedDate(new Date());
+    	
     }
     
     @DisplayName("Get Patients API")
@@ -67,7 +68,7 @@ public class PatientControllerTest {
 
             mockMvc.perform(get(RequestMappings.PATIENTS_API))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$[0].firstName").value("John"));
+                    .andExpect(jsonPath("$[0].first_name").value("John"));
         }
 	
     }
@@ -85,7 +86,7 @@ public class PatientControllerTest {
 
             mockMvc.perform(get(RequestMappings.PATIENTS_API + "/1"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.firstName").value("John"));
+                    .andExpect(jsonPath("$.first_name").value("John"));
         }
     	
     	@Test

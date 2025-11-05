@@ -21,6 +21,8 @@ public interface Messages {
 	String PATIENT_PHONE_ALREADY_EXIST = "Patient phone number already exists";
 	
 	// error for log messages
+	String PATIENT_NOT_FOUND_LOG_MSG = "Patient not exist with id '%s' ";
+	
 	String PATIENT_EMAIL_ALREADY_EXIST_LOG_MSG = "Patient email '%s' already exists";
 	
 	String PATIENT_PHONE_ALREADY_EXIST_LOG_MSG = "Patient phone '%s' already exists";

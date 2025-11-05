@@ -20,7 +20,7 @@ public class PatientService {
 	private final PatientRepository patientRepository;
 
     public List<Patient> getAllPatients() {
-        return patientRepository.findAll();
+        return patientRepository.findByDeleted(false);
     }
 
     public Patient getPatientById(Long id) {
@@ -29,7 +29,7 @@ public class PatientService {
     	
     	if (patient == null) {
     		// throw exception
-    		throw new EntityNotFoundException("Patient not found", "Patient not exist with id '%s' ".formatted(id));
+    		throw new EntityNotFoundException(Messages.PATIENT_NOT_FOUND, Messages.PATIENT_NOT_FOUND_LOG_MSG.formatted(id));
     	}
     	
         return patient;
@@ -103,7 +103,7 @@ public class PatientService {
     	
     	Patient patientByPhone = patientRepository.findByPhoneNumberAndDeleted(request.getPhoneNumber(), false);
     	if (patientByPhone != null && patientByPhone.getId() != id) {
-    		throw new DataAlreadyExistsException(Messages.PATIENT_EMAIL_ALREADY_EXIST, "Patient phone '%s' already exists".formatted(request.getPhoneNumber()));
+    		throw new DataAlreadyExistsException(Messages.PATIENT_PHONE_ALREADY_EXIST, "Patient phone '%s' already exists".formatted(request.getPhoneNumber()));
     	}
     }
 

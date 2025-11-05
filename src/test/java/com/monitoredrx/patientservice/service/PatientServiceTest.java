@@ -56,7 +56,7 @@ public class PatientServiceTest {
     	@Test
         void shouldReturnAllPatients() {
         	
-        	when(patientRepository.findAll()).thenReturn(List.of(patient));
+        	when(patientRepository.findByDeleted(any(Boolean.class))).thenReturn(List.of(patient));
 
         	List<Patient> patients = patientService.getAllPatients();
             

@@ -1,9 +1,11 @@
 package com.monitoredrx.patientservice.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.monitoredrx.patientservice.common.Messages;
 import com.monitoredrx.patientservice.controller.common.RequestMappings;
+import com.monitoredrx.patientservice.controller.dto.PatientAddressDto;
 import com.monitoredrx.patientservice.controller.dto.request.CreateOrUpdatePatientRequest;
+import com.monitoredrx.patientservice.controller.dto.response.GetPatientResponse;
 import com.monitoredrx.patientservice.exception.ErrorResponse;
 import com.monitoredrx.patientservice.exception.GlobalExceptionHandler;
 import com.monitoredrx.patientservice.model.Patient;
@@ -31,6 +35,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Slf4j
+//@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping(RequestMappings.PATIENTS_API)
 @RequiredArgsConstructor
@@ -48,10 +53,29 @@ public class PatientController extends GlobalExceptionHandler {
             @ApiResponse(responseCode = "200", description = "Success")
         })
     @GetMapping
-    public List<Patient> getAllPatients() {
+    public List<GetPatientResponse> getAllPatients() {
     	
     	log.info(Messages.GET_ALL_PATIENTS);
-        return service.getAllPatients();
+    	
+    	List<Patient> patients = service.getAllPatients();
+    	
+    	List<GetPatientResponse> responseList = new ArrayList<>(patients.size());
+
+    	patients.forEach(p -> {
+    		PatientAddressDto address = new PatientAddressDto();
+    		address.setAddress(p.getAddress());
+    		address.setCity(p.getCity());
+    		address.setState(p.getState());
+    		address.setZipCode(p.getZipCode());
+    		
+			GetPatientResponse patientResponse = new GetPatientResponse(p.getId(), p.getFirstName(), p.getLastName(),
+					p.getPhoneNumber(), p.getEmail(), address);
+			
+			responseList.add(patientResponse);
+    	});
+    	
+    	
+        return responseList;
     }
 
     @Operation(summary = "Get patient by ID", responses = {
@@ -63,11 +87,26 @@ public class PatientController extends GlobalExceptionHandler {
                 )
         })
     @GetMapping("/{id}")
-    public ResponseEntity<Patient> getPatientById(@PathVariable("id") Long id) {
+    public ResponseEntity<GetPatientResponse> getPatientById(@PathVariable("id") Long id) {
     	
     	log.info(Messages.GET_PATIENT_BY_ID, id);
     	
-    	return ResponseEntity.ok(service.getPatientById(id));
+    	Patient patient = service.getPatientById(id);
+    	PatientAddressDto address = new PatientAddressDto();
+    	address.setAddress(patient.getAddress());
+    	address.setCity(patient.getCity());
+    	address.setState(patient.getState());
+    	address.setZipCode(patient.getZipCode());
+    	
+		GetPatientResponse response = new GetPatientResponse(
+				patient.getId(), 
+				patient.getFirstName(),
+				patient.getLastName(), 
+				patient.getPhoneNumber(), 
+				patient.getEmail(), 
+				address);
+    	
+    	return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Create a new patient", responses = {
