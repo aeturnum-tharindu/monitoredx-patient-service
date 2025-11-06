@@ -61,7 +61,7 @@ public class PatientServiceTest {
         	List<Patient> patients = patientService.getAllPatients();
             
         	assertThat(patients).hasSize(1);
-            verify(patientRepository, times(1)).findAll();
+            verify(patientRepository, times(1)).findByDeleted(false);
         }
     	
     }
