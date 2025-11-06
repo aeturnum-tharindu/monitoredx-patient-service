@@ -1,6 +1,5 @@
 package com.monitoredrx.patientservice.common;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface Messages.
  */
